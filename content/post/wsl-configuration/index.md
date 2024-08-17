@@ -84,7 +84,7 @@ set ws=wscript.CreateObject("wscript.shell")
 ws.run "wsl -d Debian", 0
 ```
 
-Debian处更改为发行版名称，此后
+Debian处更改为发行版名称。然后可以在任务管理器-启动中将wsl作为启动项管理。
 
 # 维护
 
