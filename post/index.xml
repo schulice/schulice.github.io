@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on chenzx's Blog</title><link>https://schulice.github.io/post/</link><description>Recent content in Posts on chenzx's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 17 Aug 2024 16:57:55 +0800</lastBuildDate><atom:link href="https://schulice.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>WSL Configuration</title><link>https://schulice.github.io/p/wsl-configuration/</link><pubDate>Sat, 17 Aug 2024 16:57:55 +0800</pubDate><guid>https://schulice.github.io/p/wsl-configuration/</guid><description>&lt;h1 id="tldr">TL;DR
+&lt;/h1>&lt;p>本文介绍wsl的一些实用配置。&lt;/p>
+&lt;h1 id="安装">安装
+&lt;/h1>&lt;p>WSL安装见&lt;a class="link" href="https://learn.microsoft.com/zh-cn/windows/wsl/" target="_blank" rel="noopener"
+>官方文档&lt;/a>&lt;/p>
+&lt;p>建议阅读文档中的其余内容来学习维护wsl的知识。&lt;/p>
+&lt;p>建议使用Debian或者Ubuntu，微软的支持比较好。&lt;/p>
+&lt;h1 id="配置">配置
+&lt;/h1>&lt;p>这里列举出配置供参考。&lt;/p>
+&lt;h2 id="wslconfig">.wslconfig
+&lt;/h2>&lt;p>具体选项内容对照文档高级wsl配置一节。&lt;/p>
+&lt;p>不建议使用稀疏磁盘（issue中有不少被破坏文件系统的），可以定期使用hyperv的磁盘管理工具释放多余空间（见文档）。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># C:/Users/&amp;lt;username&amp;gt;/.wslconfig
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[wsl2]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">processors=4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">memory=8GB
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">swap=4GB
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">vmIdleTimeout=30000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">guiApplications=true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nestedVirtualization=true # 嵌套虚拟化
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">networkingMode=mirrored
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dnsTunneling=true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">firewall=true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[experimental]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">autoMemoryReclaim=dropcache # 可以在 gradual 、dropcache 、disabled 之间选择
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># sparseVhd=true # maybe cause some error
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">hostAddressLoopback=true # 外部可访问wsl内部服务
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="wslconf">wsl.conf
+&lt;/h2>&lt;p>开启systemd支持，command 处设置kvm组权限，以便发行版使用kvm。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># /etc/wsl.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[boot]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">systemd=true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">command=/bin/bash -c &amp;#39;chown -v root:kvm /dev/kvm &amp;amp;&amp;amp; chmod 660 /dev/kvm&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[interop]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">appendWindowsPath=false # need add path on profile
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="etcprofile">/etc/profile
+&lt;/h2>&lt;p>隔离wsl与windows的path后添加部分实用app到PATH中。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># windows path&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;$PATH:/mnt/c/Users/schulice/AppData/Local/Microsoft/WindowsApps&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;$PATH:/mnt/c/Program Files/Docker/Docker/resources/bin&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;$PATH:/mnt/c/Windows&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;$PATH:/mnt/c/Program Files/Microsoft VS Code/bin&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="windows启动时同时启动wsl">windows启动时同时启动wsl
+&lt;/h1>&lt;p>放在 C:\Users&amp;lt;username&amp;gt;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">set ws=wscript.CreateObject(&amp;#34;wscript.shell&amp;#34;)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ws.run &amp;#34;wsl -d Debian&amp;#34;, 0
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Debian处更改为发行版名称。然后可以在任务管理器-启动中将wsl作为启动项管理。&lt;/p>
+&lt;h1 id="维护">维护
+&lt;/h1>&lt;h2 id="wsl启动失败">wsl启动失败
+&lt;/h2>&lt;p>关闭后再开启wsl，虚拟机平台等windows功能，有概率恢复正常，具体原因不明。&lt;/p>
+&lt;h2 id="wsl空间使用过多">wsl空间使用过多
+&lt;/h2>&lt;p>&lt;a class="link" href="https://learn.microsoft.com/zh-cn/windows/wsl/disk-space" target="_blank" rel="noopener"
+>RTFM&lt;/a>&lt;/p>
+&lt;h2 id="其他的虚拟机">其他的虚拟机
+&lt;/h2>&lt;p>可以使用windows自带的hyperv管理作为hypervisor，有一些网络nat的设置需要具体的指令（gui中没有）。&lt;/p>
+&lt;h2 id="cuda-toolkit">CUDA toolkit
+&lt;/h2>&lt;p>阅读cuda官方文档。只需要安装toolkit包，已有驱动支持（与wsl的驱动有冲突）。&lt;/p>
+&lt;h2 id="docker">docker
+&lt;/h2>&lt;p>安装docker-desktop，后续使用阅读docker文档。&lt;/p></description></item><item><title>CS144-Lab总结</title><link>https://schulice.github.io/p/cs144-lab%E6%80%BB%E7%BB%93/</link><pubDate>Tue, 16 Apr 2024 05:41:59 +0000</pubDate><guid>https://schulice.github.io/p/cs144-lab%E6%80%BB%E7%BB%93/</guid><description>&lt;h1 id="前言">前言
+&lt;/h1>&lt;p>cs144是斯坦福大学的计算机网络入门课程，在2024.4.6-4.15我陆续完成了该Lab的除了书面报告外的内容，在此总结整个过程，同时作分享交流使用。&lt;/p>
+&lt;p>该Lab使用现代C++，使用Cmake作为管理工具。主要的内容有：简单的网络工具的使用，在框架代码的基础上实现1. 简化的tcp协议栈（lab0-lab4），2. ARP请求与回应过程（lab5），3. 路由中最长前缀匹配的逻辑（lab6），总体而言难度不大，全程单线程，不大需要前置知识，对C++及数据结构有一定了解即可。&lt;/p>
+&lt;p>个人觉得做这个lab最大的收获是看框架代码的组织形式，观察课程导师Keith Winstein是怎样设计各个类的公共接口和行为，怎样方便地组织测试过程。得到了很多设计上的补益。
+接下来我会介绍我是怎样实现各个lab的，具体的代码可以查看我fork的仓库，&lt;strong>如果有希望自己做的同学朋友还请不要看&lt;/strong>。这里附上一张lab文档中的介绍图。&lt;/p>
+&lt;p>&lt;img src="https://schulice.github.io/p/cs144-lab%E6%80%BB%E7%BB%93/1.png"
+width="1164"
+height="1066"
+srcset="https://schulice.github.io/p/cs144-lab%E6%80%BB%E7%BB%93/1_hu_2252698dd548275a.png 480w, https://schulice.github.io/p/cs144-lab%E6%80%BB%E7%BB%93/1_hu_d58471995832ac2d.png 1024w"
+loading="lazy"
+alt="introduce"
+class="gallery-image"
+data-flex-grow="109"
+data-flex-basis="262px"
+>&lt;/p>
+&lt;h1 id="环境配置">环境配置
+&lt;/h1>&lt;p>如果你使用的是滚动发行版或者最新的ubuntu23.10，默认安装的gcc版本就是13.2了。
+如果你使用debian12，希望使用新的gcc，请查看gcc的安装文档，编译安装gcc。相关的资料很多，这里只介绍我遇到的一些小问题：&lt;/p>
+&lt;ol>
+&lt;li>vscode调试时，不能使用native debugger插件，我尝试为之设置LD_LIBRARY_PATH的环境变量（通过json配置和.gdbinit文件），始终无法正确加载symbol，故弃用。临时的解决办法是用Microsoft的cpp插件，它在启动时会新建shell，将环境变量设置在.bashrc中即可。&lt;/li>
+&lt;li>tidy target无法正常构建，默认clang版本太低，升级即可。&lt;/li>
+&lt;/ol>
+&lt;h1 id="lab0-bytestream">LAB0 ByteStream
+&lt;/h1>&lt;h2 id="任务">任务
+&lt;/h2>&lt;ol>
+&lt;li>使用telnet工具发起http请求和其他请求。&lt;/li>
+&lt;li>在webget.cc中使用TCPSocket发起简单的http请求。注意结束时需要向流中输入额外的空行，http中换行符为/r/n。&lt;/li>
+&lt;li>实现可靠的字节流。&lt;/li>
+&lt;/ol>
+&lt;h2 id="解决方法">解决方法
+&lt;/h2>&lt;p>在ByteStream类中添加string作为buffer即可。需要记录push和pop的字节数量。
+注意流写入端关闭并且输出完毕后读端才finish。效率一般，测试框架给出的速度是1.5Gbit/s。&lt;/p>
+&lt;h2 id="印象">印象
+&lt;/h2>&lt;p>框架代码使用reader和writer类来对ByteStream类进行功能扩展，同时使ByteStream可以得到两类的实例，将读取和写入功能分离。&lt;/p>
+&lt;h1 id="lab1-reassember">LAB1 Reassember
+&lt;/h1>&lt;h2 id="任务-1">任务
+&lt;/h2>&lt;p>在ByteStream的基础上实现一个流重组器，即将乱序接受到的带索引的字节段转换为有序的字节流。&lt;/p>
+&lt;h2 id="解决方法-1">解决方法
+&lt;/h2>&lt;p>一开始的想法比较简单，因为它的capability（总的传输字串长度）是有限的，我们只需要维护一个从（已经输出的有序字节流的最后下标+1）开始的字符串，每次接受前重设string大小，根据接受到的段直接覆盖对应的空字符，输出时pop第一个空字符前的子串即可。&lt;strong>但是这样存在问题，输入的字串中也会包含空字符&lt;/strong>。最后弃用。&lt;/p>
+&lt;p>更加有效率的方法是使用map存储多个段并进行合并，判断map非空和首个段下标即可。
+合并视图过程如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">---- ---- ---- // 已有段，标号1，2，3
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ~~~~~~~~~~~~ // 将插入的段
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>前向合并后后向合并即可。需要注意的是如下情况需要排除：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">-------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ~~~~~~
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>还有很多边界上的检查，以及需要根据它传入的标志来初始化结束下标，关闭时机就是output_index == end_index。&lt;/p>
+&lt;h2 id="印象-1">印象
+&lt;/h2>&lt;p>各项测试用例相当细节，会有在写算法题的错觉。最后测试的速度为15GBit/s，还不错。&lt;/p>
+&lt;h1 id="lab2-tcpreceiver">LAB2 TCPReceiver
+&lt;/h1>&lt;h2 id="任务-2">任务
+&lt;/h2>&lt;ol>
+&lt;li>实现一个循环32位正整数，将64位正整数封装，可以根据零点和检查点输出。&lt;/li>
+&lt;li>实现一个简化后的TCPReceiver，利用Warp32来封装随机选取的开始点。&lt;/li>
+&lt;/ol>
+&lt;h2 id="解决方案">解决方案
+&lt;/h2>&lt;ol>
+&lt;li>Warp32包装时取模，去包装时根据checkpoint得到UINT32MAX的系数，左右移动下就可以得到最靠近的数值（极值点只有一个）。不需要枚举和二分来找这个系数（是的我犯蠢了）。&lt;/li>
+&lt;li>receiver的要注意的细节是，ackno和流中字节段下标有SYN和FIN两个东西，需要加加减减。选好zeropoint即可（我使用SYN前为零点）。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://schulice.github.io/p/cs144-lab%E6%80%BB%E7%BB%93/2.png"
+width="850"
+height="222"
+srcset="https://schulice.github.io/p/cs144-lab%E6%80%BB%E7%BB%93/2_hu_97521b56183bb629.png 480w, https://schulice.github.io/p/cs144-lab%E6%80%BB%E7%BB%93/2_hu_9dc81960eddfb348.png 1024w"
+loading="lazy"
+alt="ackno-index"
+class="gallery-image"
+data-flex-grow="382"
+data-flex-basis="918px"
+>&lt;/p>
+&lt;h2 id="印象-2">印象
+&lt;/h2>&lt;p>一开始对Warp的理解有些问题，废了不少无谓的力气。将这个随机的起始下标封装起来，上层使用起来确实方便不少。&lt;/p>
+&lt;h1 id="lab3-tcpsender">LAB3 TCPSender
+&lt;/h1>&lt;h2 id="任务-3">任务
+&lt;/h2>&lt;p>实现TCPSender，可以与receive完成发送和接受字节流的任务。
+它需要暂时存放已发送但未确认的message。&lt;/p>
+&lt;h2 id="解决方案-1">解决方案
+&lt;/h2>&lt;ol>
+&lt;li>封装了timer来进行tick函数的计时，记录RTO重传超时时间，double RTO，reset。&lt;/li>
+&lt;li>记录已发送和已确认的abs seqno（见上表）。&lt;/li>
+&lt;li>在push过程，
+&lt;ol>
+&lt;li>假装windows size（receiver可以接受的段的长度）始终大于1。这样在windows size等于零时不断询问receiver，同时也包括了初始化时的逻辑。&lt;/li>
+&lt;li>建立空的msg（seqno为已发送下一位），判断是否需要SYN标志。&lt;/li>
+&lt;li>根据msg，windows size，input流中缓存的字串长度，msg buffer中字串长度和最大负载长度来得到负载字符串的长度。&lt;/li>
+&lt;li>根据输入流是否finish（payload拿走字串后），是否有足够的windows size，sender是否已经关闭（不能重复生成关闭信息）来判断是否设置FIN。&lt;/li>
+&lt;li>计算msg length，拒绝空msg。&lt;/li>
+&lt;li>发送并加入msg buffer（更新已发送seqno）。&lt;/li>
+&lt;li>更新唤醒计时器和重传次数。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>在receive过程，
+&lt;ol>
+&lt;li>更新windows size和RST&lt;/li>
+&lt;li>根据ackno是否包含值来判断是否需要重新初始化。&lt;/li>
+&lt;li>根据ackno更新已确认seqno，并且逐出buffer中的无用msg&lt;/li>
+&lt;li>如果缓存长度为零则关闭计时器，否则重启计时器（当次传输未完成）&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>在tick过程，计时器更新时间，特化发送空msg的情况，不断重发buffer首包。&lt;/li>
+&lt;li>初始化中，sender发送SYN-&amp;gt;接受ackno-&amp;gt;正常发送。&lt;/li>
+&lt;li>关闭过程，sender发送FIN-&amp;gt;接受未包含FIN的ackno-&amp;gt;超时继续发送FIN-&amp;gt;接受包含FIN的ackno-&amp;gt;停止。&lt;/li>
+&lt;/ol>
+&lt;h2 id="印象-3">印象
+&lt;/h2>&lt;p>比较长并且复杂，修改了好几遍逻辑。同实际上的tcp挥手相比，没有第四次和超时关闭。
+需要注意的是，在lab5merge进来时添加了额外的测试用例，比如接受时是否过滤掉不在msgbuffer下标集合中的ackno，可能需要修改receive过程的细节。&lt;/p>
+&lt;h1 id="lab4-test-cs144socket">LAB4 Test CS144Socket
+&lt;/h1>&lt;h2 id="任务-4">任务
+&lt;/h2>&lt;p>更改TCPSocket为框架代码的CS144Socket，测试是否可是使用。&lt;/p>
+&lt;h2 id="解决方案-2">解决方案
+&lt;/h2>&lt;p>一遍跑通了。&lt;/p>
+&lt;h2 id="印象-4">印象
+&lt;/h2>&lt;p>框架代码的比较复杂，我片面概括下，有所缺漏，还望不吝赐教。
+对于Socket，从FD到Socket到LocalStreamSocket到需要满足读写需求的类型的TCPMinnowSocket模版，用于将TCPPeer封装起来符合unix-like的sockets-api。
+TCPOverIPv4OverTunFdAdapter作为其特化为CS144Socket的类型，主要是绑定到tun设备，实现ipv4数据包到tcp段的转换。
+对于TCPPeer，封装了我们的sender和receiver，管理tcp connect过程，实现这个在之前也实验的一部分，不过这次没有。&lt;/p>
+&lt;h1 id="lab5-arp-and-ipv4-datagram">LAB5 ARP and IPv4 Datagram
+&lt;/h1>&lt;h2 id="任务-5">任务
+&lt;/h2>&lt;p>将ipv4 datagram转换为ethernet frame发送，实现ARP请求与回应。&lt;/p>
+&lt;h2 id="解决方案-3">解决方案
+&lt;/h2>&lt;p>发送ipv4 datagram时将其序列化在ethernet frame中，查找是否有ip到mac地址的映射，根据ipv4地址来向实际上的ethernet address发送frame。查找不到时就需要ARP了。
+ARP过程有两个超时要pop的地方，一是发送的arp请求不能在5s内再发送，二是ip到mac的映射只维护30s。
+所以我维护了两张LRU链表，得益于自由的C++，可以将iterator脱离生命周期垂悬（unsafe了），用以list::iterator为值的hashmap和含有hashmap::iterator的结构体作为list成员即可以实现，当然需要小心不要访问错误的内存位置。时间更新时沿着链表删除即可。&lt;/p>
+&lt;h2 id="印象-5">印象
+&lt;/h2>&lt;p>C++的反向迭代器删除元素时要注意位置，建议找下最佳实现。&lt;/p>
+&lt;h1 id="lab6-prefix-match">LAB6 Prefix Match
+&lt;/h1>&lt;h2 id="任务-6">任务
+&lt;/h2>&lt;p>实现路由过程中最长前缀匹配目标ip的转发。&lt;/p>
+&lt;h2 id="解决方案-4">解决方案
+&lt;/h2>&lt;p>虽然任务书中指明O(n)的匹配时间复杂度时可以接受的，但是我们可以将pair&amp;lt;ip_prefix, prefix_length&amp;gt;作为key与rule做映射，使用hashmap需要额外定义一个hasher，可以抄下boost的hash连接函数hash_second + 0x9e3779b9 + ( hash_first &amp;laquo; 6 ) + ( hash_first &amp;raquo; 2 )。
+找最长前缀匹配时右移32下即可（ip转为uint32_t)，注意对0.0.0.0/0的特殊匹配。
+这样时间复杂度就近似O(1)了。
+注意下ipv4header的校验和。&lt;/p>
+&lt;h2 id="印象-6">印象
+&lt;/h2>&lt;p>这个实验不需要算路由规则，很快就写完了。&lt;/p>
+&lt;h1 id="lab7-real-world">LAB7 Real World
+&lt;/h1>&lt;h2 id="任务-7">任务
+&lt;/h2>&lt;p>使用框架代码中的应用，测试自己的实现是否可以参与真实的网络连接。&lt;/p>
+&lt;ol>
+&lt;li>起一个服务端和用户端，测试是否连接成功。&lt;/li>
+&lt;li>传输1mb的文件流，测试发送的和接受的文件sha256是否相等。&lt;/li>
+&lt;/ol>
+&lt;h2 id="解决方案-5">解决方案
+&lt;/h2>&lt;p>直接上即可。&lt;/p>
+&lt;h2 id="印象-7">印象
+&lt;/h2>&lt;p>发送1mb的文件大概需要1min，一开始可以很快到300kb左右，然后发送速度会下降，因为我们的tick激活时只发送buffer中第一个包，一开始的发送结束后会是一个一个包的发，加上课程的服务器连接延迟较高，不要着急。
+有写完的同学朋友也可以一起跨主机测试下。&lt;/p>
+&lt;h1 id="结语">结语
+&lt;/h1>&lt;p>我fork的仓库在&lt;a class="link" href="https://github.com/schulice/CS144-Lab%e3%80%82" target="_blank" rel="noopener"
+>https://github.com/schulice/CS144-Lab。&lt;/a>&lt;/p></description></item></channel></rss>
