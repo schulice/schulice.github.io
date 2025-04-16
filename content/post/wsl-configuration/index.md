@@ -26,13 +26,14 @@ WSL安装见[官方文档](https://learn.microsoft.com/zh-cn/windows/wsl/)
 
 这里列举出配置供参考。
 
-## .wslconf
+## .wslconfig
 
 具体选项内容对照文档高级wsl配置一节。
 
 不建议使用稀疏磁盘（issue中有不少被破坏文件系统的），可以定期使用hyperv的磁盘管理工具释放多余空间（见文档）。
 
 ```
+# C:/Users/<username>/.wslconfig
 [wsl2]
 processors=4
 memory=8GB
@@ -55,6 +56,7 @@ hostAddressLoopback=true # 外部可访问wsl内部服务
 开启systemd支持，command 处设置kvm组权限，以便发行版使用kvm。
 
 ```
+# /etc/wsl.conf
 [boot]
 systemd=true
 command=/bin/bash -c 'chown -v root:kvm /dev/kvm && chmod 660 /dev/kvm'
